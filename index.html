@@ -1,54 +1,32 @@
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
 
-    <head>
-        <title>Basic Embed</title>
-        <script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.17/dist/quicksight-embedding-js-sdk.min.js"></script>
-        <script type="text/javascript">
-            var dashboard
-            function onDashboardLoad(payload) {
-                console.log("Do something when the dashboard is fully loaded.");
-            }
+<head>
+    <title>Basic Embed</title>
+    <script type="text/javascript" src="https://public.end.point/embedded-dashboards-sdk.min.js"></script>
+    <script type="text/javascript">
+        function embedDashboard() {
+            var containerDiv = document.getElementById("dashboardContainer");
+            var params = {
+                url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/805985b7-1393-4b91-97a6-f2f592999738",
+                container: containerDiv,
+                parameters: {
+                    country: 'United States'
+                },
+                height: "700px",
+                width: "1000px"
+            };
+            var dashboard = QuickSightEmbedding.embedDashboard(params);
+            dashboard.on('error', function() {});
+            dashboard.on('load', function() {});
+            dashboard.setParameters({country: 'Canada'});
+        }
+    </script>
 
-            function onError(payload) {
-                console.log("Do something when the dashboard fails loading");
-            }
+</head>
 
-            function embedDashboard() {
-                var containerDiv = document.getElementById("embeddingContainer");
-                var options = {
-                    url: "https://us-east-1.quicksight.aws.amazon.com/sn/dashboards/dashboardId?isauthcode=true&identityprovider=quicksight&code=authcode",
-                    container: containerDiv,
-                    parameters: {
-                        country: "United States"
-                    },
-                    scrolling: "no",
-                    height: "700px",
-                    width: "1000px",
-                    locale: "en-US",
-                    footerPaddingEnabled: true
-                };
-                dashboard = QuickSightEmbedding.embedDashboard(options);
-                dashboard.on("error", onError);
-                dashboard.on("load", onDashboardLoad);
-            }
+<body onload="embedDashboard()">
+    <div id="dashboardContainer"></div>
+</body>
 
-            function onCountryChange(obj) {
-                dashboard.setParameters({country: obj.value});
-            }
-        </script>
-    </head>
-
-    <body onload="embedDashboard()">
-        <span>
-            <label for="country">Country</label>
-            <select id="country" name="country" onchange="onCountryChange(this)">
-                <option value="United States">United States</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Argentina">Argentina</option>
-            </select>
-        </span>
-        <div id="embeddingContainer"></div>
-    </body>
-
-    </html>
+</html>
